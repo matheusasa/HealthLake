@@ -33,7 +33,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
+    <div className="min-h-dvh flex items-center justify-center bg-slate-50 px-4 sm:px-6">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-slate-900">HealthLake</h1>
@@ -46,7 +46,7 @@ export default function LoginPage() {
             Entrar
           </h2>
           {error && (
-            <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+            <div aria-live="polite" className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
               {error}
             </div>
           )}
@@ -62,6 +62,7 @@ export default function LoginPage() {
                 id="email"
                 type="email"
                 required
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
@@ -79,6 +80,7 @@ export default function LoginPage() {
                 id="password"
                 type="password"
                 required
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
@@ -88,6 +90,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
+              aria-busy={loading}
               className="w-full rounded-lg bg-teal-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {loading ? "Entrando..." : "Entrar"}

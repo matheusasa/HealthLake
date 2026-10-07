@@ -97,7 +97,7 @@ export function EnvironmentsContent({ data }: Props) {
   return (
     <div className="space-y-8">
       {/* Environment Selector */}
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
         <label htmlFor="env-select" className="text-sm font-medium text-slate-700">
           Filtrar por ambiente:
         </label>
@@ -105,7 +105,7 @@ export function EnvironmentsContent({ data }: Props) {
           id="env-select"
           value={selectedEnv}
           onChange={(e) => setSelectedEnv(e.target.value)}
-          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 w-full sm:w-auto"
         >
           <option value="all">Todos os Ambientes</option>
           {data.environments.map((env) => (
@@ -120,7 +120,7 @@ export function EnvironmentsContent({ data }: Props) {
       </div>
 
       {/* Environment Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
         {data.environments
           .filter((env) => selectedEnv === "all" || env.name === selectedEnv)
           .map((env) => (
@@ -199,7 +199,7 @@ export function EnvironmentsContent({ data }: Props) {
         <p className="text-xs text-slate-500 mb-6">
           Visão radial das métricas percentuais entre ambientes
         </p>
-        <div className="h-[380px] w-full">
+        <div className="h-[280px] sm:h-[340px] lg:h-[380px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
               <PolarGrid stroke="#e2e8f0" />
@@ -261,22 +261,22 @@ export function EnvironmentsContent({ data }: Props) {
           Comparação lado a lado com destaque para divergências significativas
         </p>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[600px] text-xs sm:text-sm">
             <thead>
               <tr className="border-b border-slate-200">
-                <th className="text-left py-3 px-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                <th className="text-left py-3 px-3 sm:px-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
                   Métrica
                 </th>
-                <th className="text-right py-3 px-4 text-xs font-semibold uppercase tracking-wider text-blue-600">
+                <th className="text-right py-3 px-3 sm:px-4 text-xs font-semibold uppercase tracking-wider text-blue-600">
                   Dev
                 </th>
-                <th className="text-right py-3 px-4 text-xs font-semibold uppercase tracking-wider text-violet-600">
+                <th className="text-right py-3 px-3 sm:px-4 text-xs font-semibold uppercase tracking-wider text-violet-600">
                   Staging
                 </th>
-                <th className="text-right py-3 px-4 text-xs font-semibold uppercase tracking-wider text-emerald-600">
+                <th className="text-right py-3 px-3 sm:px-4 text-xs font-semibold uppercase tracking-wider text-emerald-600">
                   Prod
                 </th>
-                <th className="text-right py-3 px-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                <th className="text-right py-3 px-3 sm:px-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
                   Maior Diferença
                 </th>
               </tr>

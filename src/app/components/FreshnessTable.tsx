@@ -13,11 +13,11 @@ export function FreshnessTable({ datasets }: Props) {
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-left text-sm">
+      <table className="w-full min-w-[600px] text-left text-xs sm:text-sm">
         <thead>
           <tr className="border-b border-slate-200 text-slate-500">
             <th className="pb-3 font-medium">Dataset</th>
-            <th className="pb-3 font-medium">Última Atualização</th>
+            <th className="pb-3 font-medium hidden sm:table-cell">Última Atualização</th>
             <th className="pb-3 font-medium">Atraso</th>
             <th className="pb-3 font-medium">Status</th>
           </tr>
@@ -26,7 +26,7 @@ export function FreshnessTable({ datasets }: Props) {
           {datasets.map((d) => (
             <tr key={d.dataset} className="group hover:bg-slate-50 transition-colors">
               <td className="py-3 font-medium text-slate-700">{d.dataset}</td>
-              <td className="py-3 text-slate-600">
+              <td className="py-3 text-slate-600 hidden sm:table-cell">
                 {new Date(d.lastUpdated).toLocaleString("pt-BR")}
               </td>
               <td className="py-3 text-slate-600">{d.delayHours}h</td>
@@ -56,6 +56,7 @@ function StatusBadge({ status }: { status: DatasetFreshness["status"] }) {
 
   return (
     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${styles[status]}`}>
+      <span className="sr-only">{labels[status]}</span>
       {labels[status]}
     </span>
   );

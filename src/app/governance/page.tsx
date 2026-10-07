@@ -38,6 +38,12 @@ export default async function GovernancePage() {
         )}
       </div>
 
+      {res.error && (
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 mb-6">
+          <p className="text-sm font-medium text-red-800">Erro ao carregar governança: {res.error}</p>
+        </div>
+      )}
+
       {/* KPI Summary */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="rounded-lg border-l-4 border-teal-500 bg-teal-50 p-5 shadow-sm text-teal-900">

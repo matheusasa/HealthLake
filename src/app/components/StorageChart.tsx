@@ -29,7 +29,7 @@ export function StorageChart({ summary }: Props) {
   }));
 
   return (
-    <div className="h-64 w-full">
+    <div className="w-full h-[250px] sm:h-[300px]">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
           <defs>
