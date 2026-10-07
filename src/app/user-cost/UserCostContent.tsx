@@ -138,8 +138,8 @@ export function UserCostContent({ data }: Props) {
                     borderRadius: "8px",
                     fontSize: "12px",
                   }}
-                  formatter={(value: number) => [formatCurrency(value), "Custo Total"]}
-                  labelFormatter={(label: string) => `Usuário: ${label}`}
+                  formatter={(value) => [formatCurrency(Number(value ?? 0)), "Custo Total"]}
+                  labelFormatter={(label) => `Usuário: ${String(label ?? "")}`}
                 />
                 <Bar dataKey="custo" radius={[0, 4, 4, 0]} barSize={24}>
                   {barData.map((entry, index) => (
@@ -211,8 +211,8 @@ export function UserCostContent({ data }: Props) {
                     borderRadius: "8px",
                     fontSize: "12px",
                   }}
-                  formatter={(value: number) => [formatCurrency(value), "Custo Agregado"]}
-                  labelFormatter={(label: string) => `Data: ${label}`}
+                  formatter={(value) => [formatCurrency(Number(value ?? 0)), "Custo Agregado"]}
+                  labelFormatter={(label) => `Data: ${String(label ?? "")}`}
                 />
                 <Area
                   type="monotone"

@@ -84,10 +84,10 @@ export function AthenaContent({ data }: Props) {
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
         {/* Daily Query Volume */}
         <section className="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-100">
+          <div className="px-4 sm:px-6 py-4 border-b border-slate-100">
             <h2 className="text-lg font-semibold text-slate-800">
               Volume Diário de Consultas
             </h2>
@@ -95,8 +95,8 @@ export function AthenaContent({ data }: Props) {
               Quantidade de queries e custo nos últimos 30 dias
             </p>
           </div>
-          <div className="p-6">
-            <div className="h-72 w-full">
+          <div className="p-4 sm:p-6">
+            <div className="h-[250px] sm:h-[300px] lg:h-[380px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart
                   data={dailyChartData}
@@ -161,8 +161,8 @@ export function AthenaContent({ data }: Props) {
               Top 6 tabelas por número de consultas
             </p>
           </div>
-          <div className="p-6">
-            <div className="h-72 w-full">
+          <div className="p-4 sm:p-6">
+            <div className="h-[250px] sm:h-[300px] lg:h-[380px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={tableChartData}
@@ -215,15 +215,15 @@ export function AthenaContent({ data }: Props) {
           </p>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
+          <table className="w-full min-w-[600px] text-left text-xs sm:text-sm">
             <thead>
               <tr className="border-b border-slate-200 text-slate-500">
-                <th className="px-6 py-3 font-medium">#</th>
-                <th className="px-6 py-3 font-medium">Query ID</th>
-                <th className="px-6 py-3 font-medium">Tabela</th>
-                <th className="px-6 py-3 font-medium text-right">Bytes Escaneados</th>
-                <th className="px-6 py-3 font-medium text-right">Duração</th>
-                <th className="px-6 py-3 font-medium text-right">Custo</th>
+                <th className="px-4 sm:px-6 py-3 font-medium">#</th>
+                <th className="px-4 sm:px-6 py-3 font-medium">Query ID</th>
+                <th className="px-4 sm:px-6 py-3 font-medium">Tabela</th>
+                <th className="px-4 sm:px-6 py-3 font-medium text-right">Bytes Escaneados</th>
+                <th className="px-4 sm:px-6 py-3 font-medium text-right">Duração</th>
+                <th className="px-4 sm:px-6 py-3 font-medium text-right">Custo</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -231,22 +231,22 @@ export function AthenaContent({ data }: Props) {
                 .sort((a, b) => b.costUSD - a.costUSD)
                 .map((q, i) => (
                   <tr key={q.queryId} className="group hover:bg-slate-50 transition-colors">
-                    <td className="px-6 py-3 text-slate-500 font-mono">{i + 1}</td>
-                    <td className="px-6 py-3 font-mono text-xs text-slate-600">
+                    <td className="px-4 sm:px-6 py-3 text-slate-500 font-mono">{i + 1}</td>
+                    <td className="px-4 sm:px-6 py-3 font-mono text-xs text-slate-600 truncate max-w-[150px] sm:max-w-none">
                       {q.queryId}
                     </td>
-                    <td className="px-6 py-3">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700">
+                    <td className="px-4 sm:px-6 py-3">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700 truncate max-w-[150px] sm:max-w-none">
                         {q.database}.{q.table}
                       </span>
                     </td>
-                    <td className="px-6 py-3 text-right text-slate-600 font-mono">
+                    <td className="px-4 sm:px-6 py-3 text-right text-slate-600 font-mono">
                       {formatBytes(q.bytesScanned)}
                     </td>
-                    <td className="px-6 py-3 text-right text-slate-600 font-mono">
+                    <td className="px-4 sm:px-6 py-3 text-right text-slate-600 font-mono">
                       {(q.executionTimeMs / 1000).toFixed(1)}s
                     </td>
-                    <td className="px-6 py-3 text-right font-mono font-medium text-teal-700">
+                    <td className="px-4 sm:px-6 py-3 text-right font-mono font-medium text-teal-700">
                       {formatCurrency(q.costUSD)}
                     </td>
                   </tr>

@@ -12,11 +12,11 @@ export function QualityMetrics({ metrics }: Props) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {metrics.map((m) => (
         <div
           key={m.rule}
-          className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 p-4"
+          className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 p-3 sm:p-4"
         >
           <div>
             <p className="font-medium text-slate-800">{m.rule}</p>
@@ -56,6 +56,8 @@ function StatusDot({ status }: { status: QualityMetric["status"] }) {
     <span
       className={`inline-block w-2.5 h-2.5 rounded-full ${colors[status]}`}
       title={labels[status]}
-    />
+    >
+      <span className="sr-only">{labels[status]}</span>
+    </span>
   );
 }

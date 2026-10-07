@@ -118,16 +118,17 @@ export function IamContent({ data }: { data: IamData }) {
           {/* USUÁRIOS TAB */}
           {activeTab === "usuarios" && (
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <p className="text-sm text-slate-500">
                   {filteredUsers.length} de {data.users.length} usuários
                 </p>
                 <input
                   type="text"
                   placeholder="Buscar por nome, email, grupo ou role..."
+                  aria-label="Buscar usuários"
                   value={userSearch}
                   onChange={(e) => setUserSearch(e.target.value)}
-                  className="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent w-72"
+                  className="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent w-full sm:w-72"
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -155,7 +156,7 @@ export function IamContent({ data }: { data: IamData }) {
           {/* ROLES TAB */}
           {activeTab === "roles" && (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
+              <table className="w-full min-w-[600px] text-left text-xs sm:text-sm">
                 <thead>
                   <tr className="border-b border-slate-200">
                     <th className="pb-3 pr-4 font-semibold text-slate-600">Role</th>
@@ -195,7 +196,7 @@ export function IamContent({ data }: { data: IamData }) {
           {/* CHAVES DE SERVIÇO TAB */}
           {activeTab === "chaves" && (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
+              <table className="w-full min-w-[600px] text-left text-xs sm:text-sm">
                 <thead>
                   <tr className="border-b border-slate-200">
                     <th className="pb-3 pr-4 font-semibold text-slate-600">Nome</th>

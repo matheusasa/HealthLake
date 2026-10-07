@@ -108,6 +108,7 @@ export function AuditContent({ data }: { data: AuditAnalytics }) {
         <input
           type="text"
           placeholder="Buscar por usuário, recurso ou descrição..."
+          aria-label="Buscar eventos de auditoria"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="flex-1 rounded-lg border border-slate-300 px-4 py-2 text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none"
@@ -221,8 +222,8 @@ export function AuditContent({ data }: { data: AuditAnalytics }) {
                 width={100}
               />
               <Tooltip
-                formatter={(value: number, name: string) => [
-                  value,
+                formatter={(value, name) => [
+                  String(value ?? 0),
                   name === "total" ? "Total de Eventos" : "Eventos Críticos",
                 ]}
                 contentStyle={{ fontSize: 12 }}

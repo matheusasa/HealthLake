@@ -28,7 +28,6 @@ function getNodeColor(node: LineageNode): string {
 }
 
 function computeLayout(nodes: LineageNode[], edges: LineageEdge[]) {
-  // Group nodes by layer and type for deterministic positioning
   const groups: Record<string, LineageNode[]> = {};
   for (const n of nodes) {
     const key = `${n.layer}_${n.type}`;
@@ -48,22 +47,105 @@ function computeLayout(nodes: LineageNode[], edges: LineageEdge[]) {
     });
   }
 
-  // Place jobs between their source and target layers
-  const jobs = groups["raw_job"] || [];
-  const stgJobs = groups["staging_job"] || [];
-  const curJobs = groups["curated_job"] || [];
+  // Classify jobs by their actual edge connections to determine which column they belong to
+  const rawToStagingJobs: LineageNode[] = [];
+  const stagingToCuratedJobs: LineageNode[] = [];
+  const otherJobs: LineageNode[] = [];
 
-  const placeJobs = (jobList: LineageNode[], baseX: number) => {
-    const startY = 80;
-    const spacing = Math.min(90, (CANVAS_HEIGHT - 160) / Math.max(jobList.length, 1));
-    jobList.forEach((j, i) => {
-      positions[j.id] = { x: baseX, y: startY + i * spacing };
+  const allJobs = nodes.filter((n) => n.type === "job");
+  for (const job of allJobs) {
+    const sourceEdges = edges.filter((e) => e.target === job.id);
+    const targetEdges = edges.filter((e) => e.source === job.id);
+    const sourceLayers = new Set(sourceEdges.map((e) => nodes.find((n) => n.id === e.source)?.layer));
+    const targetLayers = new Set(targetEdges.map((e) => nodes.find((n) => n.id === e.target)?.layer));
+
+    if (sourceLayers.has("raw") && targetLayers.has("staging")) {
+      rawToStagingJobs.push(job);
+    } else if (sourceLayers.has("staging") && targetLayers.has("curated")) {
+      stagingToCuratedJobs.push(job);
+    } else {
+      otherJobs.push(job);
+    }
+  }
+
+  // Place jobs vertically centered relative to their connected source/target tables
+  const placeJobsByConnections = (
+    jobList: LineageNode[],
+    baseX: number,
+    getConnectedYs: (job: LineageNode) => number[],
+  ) => {
+    if (jobList.length === 0) return;
+
+    // Sort jobs by the average Y of their connected nodes to reduce edge crossings
+    const sorted = [...jobList].sort((a, b) => {
+      const aYs = getConnectedYs(a);
+      const bYs = getConnectedYs(b);
+      const aAvg = aYs.length > 0 ? aYs.reduce((s, y) => s + y, 0) / aYs.length : CANVAS_HEIGHT / 2;
+      const bAvg = bYs.length > 0 ? bYs.reduce((s, y) => s + y, 0) / bYs.length : CANVAS_HEIGHT / 2;
+      return aAvg - bAvg;
     });
+
+    const minSpacing = NODE_RADIUS_JOB * 2 + 20; // diameter + padding
+    const availableHeight = CANVAS_HEIGHT - 100;
+    const spacing = Math.max(minSpacing, availableHeight / Math.max(sorted.length, 1));
+    const startY = Math.max(50, (CANVAS_HEIGHT - spacing * (sorted.length - 1)) / 2);
+
+    sorted.forEach((j, i) => {
+      const connectedYs = getConnectedYs(j);
+      let y: number;
+      if (connectedYs.length > 0) {
+        // Try to align with connected nodes, but clamp to avoid overlap
+        const avgY = connectedYs.reduce((s, v) => s + v, 0) / connectedYs.length;
+        y = Math.max(startY, Math.min(startY + (sorted.length - 1) * spacing, avgY));
+      } else {
+        y = startY + i * spacing;
+      }
+      positions[j.id] = { x: baseX, y };
+    });
+
+    // Resolve overlaps: push overlapping nodes apart
+    const placed = sorted.map((j) => ({ id: j.id, y: positions[j.id].y }));
+    placed.sort((a, b) => a.y - b.y);
+    for (let i = 1; i < placed.length; i++) {
+      if (placed[i].y - placed[i - 1].y < minSpacing) {
+        placed[i].y = placed[i - 1].y + minSpacing;
+      }
+    }
+    for (const p of placed) {
+      positions[p.id] = { x: baseX, y: Math.min(p.y, CANVAS_HEIGHT - 40) };
+    }
   };
 
-  placeJobs(jobs, 270);
-  placeJobs(stgJobs, 270);
-  placeJobs(curJobs, 570);
+  placeJobsByConnections(rawToStagingJobs, 270, (job) => {
+    const ys: number[] = [];
+    for (const e of edges) {
+      if (e.source === job.id || e.target === job.id) {
+        const otherId = e.source === job.id ? e.target : e.source;
+        if (positions[otherId]) ys.push(positions[otherId].y);
+      }
+    }
+    return ys;
+  });
+
+  placeJobsByConnections(stagingToCuratedJobs, 570, (job) => {
+    const ys: number[] = [];
+    for (const e of edges) {
+      if (e.source === job.id || e.target === job.id) {
+        const otherId = e.source === job.id ? e.target : e.source;
+        if (positions[otherId]) ys.push(positions[otherId].y);
+      }
+    }
+    return ys;
+  });
+
+  // Fallback for any unclassified jobs
+  if (otherJobs.length > 0) {
+    const startY = 80;
+    const spacing = Math.min(90, (CANVAS_HEIGHT - 160) / otherJobs.length);
+    otherJobs.forEach((j, i) => {
+      positions[j.id] = { x: 270, y: startY + i * spacing };
+    });
+  }
 
   return positions;
 }
@@ -133,14 +215,14 @@ export function LineageContent({ data }: Props) {
 
       {/* Graph Section */}
       <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+        <div className="px-4 sm:px-6 py-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold text-slate-800">Grafo de Linhagem</h2>
             <p className="text-sm text-slate-500 mt-0.5">
               Fluxo de dados: Raw → Staging → Curated via Glue Jobs
             </p>
           </div>
-          <div className="flex items-center gap-4 text-xs text-slate-500">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-slate-500">
             <span className="flex items-center gap-1.5">
               <span className="w-3 h-3 rounded-full bg-teal-600" /> Raw
             </span>
@@ -155,11 +237,11 @@ export function LineageContent({ data }: Props) {
             </span>
           </div>
         </div>
-        <div className="p-4 overflow-x-auto">
+        <div className="p-2 sm:p-4 overflow-x-auto">
           <svg
             ref={svgRef}
             viewBox={`0 0 ${CANVAS_WIDTH} ${CANVAS_HEIGHT}`}
-            className="w-full min-w-[700px] h-auto"
+            className="w-full h-auto min-w-[600px]"
             style={{ maxHeight: "520px" }}
           >
             {/* Layer labels */}
@@ -377,13 +459,13 @@ export function LineageContent({ data }: Props) {
           </p>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
+          <table className="w-full min-w-[600px] text-left text-xs sm:text-sm">
             <thead>
               <tr className="border-b border-slate-200 text-slate-500">
-                <th className="px-6 py-3 font-medium">Origem</th>
-                <th className="px-6 py-3 font-medium">Job ETL</th>
-                <th className="px-6 py-3 font-medium">Destino</th>
-                <th className="px-6 py-3 font-medium">Direção</th>
+                <th className="px-4 sm:px-6 py-3 font-medium">Origem</th>
+                <th className="px-4 sm:px-6 py-3 font-medium">Job ETL</th>
+                <th className="px-4 sm:px-6 py-3 font-medium">Destino</th>
+                <th className="px-4 sm:px-6 py-3 font-medium">Direção</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">

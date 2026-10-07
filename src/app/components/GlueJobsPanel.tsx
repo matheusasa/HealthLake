@@ -12,7 +12,7 @@ export function GlueJobsPanel({ jobs }: Props) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {jobs.map((job) => {
         const lastRun = job.recentRuns[0];
         const hasRecentFailure = job.recentRuns.some(
@@ -33,7 +33,7 @@ export function GlueJobsPanel({ jobs }: Props) {
           >
             <div className="flex items-start justify-between">
               <div>
-                <p className="font-medium text-slate-800">{job.name}</p>
+                <p className="font-medium text-slate-800 truncate max-w-[200px] sm:max-w-none">{job.name}</p>
                 <p className="text-xs text-slate-500 mt-0.5">
                   {job.type} • {job.state}
                 </p>
@@ -101,7 +101,7 @@ function RunStatusBadge({
 
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+      className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] sm:text-xs font-medium ${
         styles[status] || styles.STOPPED
       }`}
     >

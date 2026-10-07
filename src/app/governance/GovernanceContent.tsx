@@ -96,18 +96,19 @@ export function GovernanceContent({ tables }: { tables: GovernanceTable[] }) {
               {filtered.length} de {tables.length} tabelas exibidas
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
             <input
               type="text"
               placeholder="Buscar tabela, banco ou responsável..."
+              aria-label="Buscar políticas"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent w-64"
+              className="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent w-full sm:w-64"
             />
             <select
               value={layerFilter}
               onChange={(e) => setLayerFilter(e.target.value)}
-              className="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white"
+              className="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white w-full sm:w-auto"
             >
               <option value="all">Todas as Camadas</option>
               <option value="raw">Raw</option>

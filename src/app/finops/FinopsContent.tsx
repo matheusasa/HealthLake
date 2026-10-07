@@ -81,7 +81,7 @@ export function FinopsContent({ data }: Props) {
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
         {/* Daily Trend */}
         <section className="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
@@ -92,8 +92,8 @@ export function FinopsContent({ data }: Props) {
               Evolução dos gastos nos últimos 30 dias
             </p>
           </div>
-          <div className="p-6">
-            <div className="h-72 w-full">
+          <div className="p-4 sm:p-6">
+            <div className="h-[250px] sm:h-[300px] lg:h-[380px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart
                   data={dailyData}
@@ -160,8 +160,8 @@ export function FinopsContent({ data }: Props) {
               Distribuição percentual dos gastos
             </p>
           </div>
-          <div className="p-6">
-            <div className="h-72 w-full">
+          <div className="p-4 sm:p-6">
+            <div className="h-[250px] sm:h-[300px] lg:h-[380px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -217,15 +217,15 @@ export function FinopsContent({ data }: Props) {
           </p>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
+          <table className="w-full min-w-[600px] text-left text-xs sm:text-sm">
             <thead>
               <tr className="border-b border-slate-200 text-slate-500">
-                <th className="px-6 py-3 font-medium">Serviço</th>
-                <th className="px-6 py-3 font-medium text-right">Valor</th>
-                <th className="px-6 py-3 font-medium text-right">
+                <th className="px-4 sm:px-6 py-3 font-medium">Serviço</th>
+                <th className="px-4 sm:px-6 py-3 font-medium text-right">Valor</th>
+                <th className="px-4 sm:px-6 py-3 font-medium text-right">
                   Participação
                 </th>
-                <th className="px-6 py-3 font-medium">Distribuição</th>
+                <th className="px-4 sm:px-6 py-3 font-medium">Distribuição</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -234,16 +234,16 @@ export function FinopsContent({ data }: Props) {
                   key={s.service}
                   className="group hover:bg-slate-50 transition-colors"
                 >
-                  <td className="px-6 py-3 font-medium text-slate-700">
+                  <td className="px-4 sm:px-6 py-3 font-medium text-slate-700 truncate max-w-[150px] sm:max-w-none">
                     {s.service}
                   </td>
-                  <td className="px-6 py-3 text-right text-slate-600 font-mono">
+                  <td className="px-4 sm:px-6 py-3 text-right text-slate-600 font-mono">
                     {formatCurrency(s.amount, s.currency)}
                   </td>
-                  <td className="px-6 py-3 text-right text-slate-600">
+                  <td className="px-4 sm:px-6 py-3 text-right text-slate-600">
                     {s.percentage}%
                   </td>
-                  <td className="px-6 py-3">
+                  <td className="px-4 sm:px-6 py-3">
                     <div className="w-full max-w-[200px] h-2 bg-slate-100 rounded-full overflow-hidden">
                       <div
                         className="h-full rounded-full"

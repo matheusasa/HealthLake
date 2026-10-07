@@ -88,14 +88,15 @@ export function AlertsContent({ alerts, channels }: Props) {
           <h2 className="text-lg font-semibold text-slate-800">Filtros</h2>
           <p className="text-sm text-slate-500 mt-0.5">Refine os alertas por severidade e status de reconhecimento</p>
         </div>
-        <div className="p-6 flex flex-wrap gap-4 items-end">
+        <div className="p-4 sm:p-6 flex flex-col sm:flex-row flex-wrap gap-4 items-start sm:items-end">
           <div>
             <label className="block text-xs font-medium text-slate-500 mb-1.5">Severidade</label>
-            <div className="flex gap-1">
+            <div className="flex flex-wrap gap-1">
               {(["all", "critical", "warning", "info"] as FilterSeverity[]).map((s) => (
                 <button
                   key={s}
                   onClick={() => setFilterSeverity(s)}
+                  aria-pressed={filterSeverity === s}
                   className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                     filterSeverity === s
                       ? "bg-slate-800 text-white"
@@ -109,7 +110,7 @@ export function AlertsContent({ alerts, channels }: Props) {
           </div>
           <div>
             <label className="block text-xs font-medium text-slate-500 mb-1.5">Status</label>
-            <div className="flex gap-1">
+            <div className="flex flex-wrap gap-1">
               {([
                 { key: "all", label: "Todos" },
                 { key: "unacknowledged", label: "Pendentes" },
@@ -118,6 +119,7 @@ export function AlertsContent({ alerts, channels }: Props) {
                 <button
                   key={opt.key}
                   onClick={() => setFilterAcknowledged(opt.key)}
+                  aria-pressed={filterAcknowledged === opt.key}
                   className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                     filterAcknowledged === opt.key
                       ? "bg-slate-800 text-white"
@@ -129,7 +131,7 @@ export function AlertsContent({ alerts, channels }: Props) {
               ))}
             </div>
           </div>
-          <div className="ml-auto text-xs text-slate-400">
+          <div className="sm:ml-auto text-xs text-slate-400">
             Exibindo {filtered.length} de {alerts.length} alertas
           </div>
         </div>
@@ -252,6 +254,8 @@ export function AlertsContent({ alerts, channels }: Props) {
                 </div>
                 <button
                   onClick={() => toggleChannel(ch.id)}
+                  role="switch"
+                  aria-checked={isActive}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
                     isActive ? "bg-teal-500" : "bg-slate-300"
                   }`}

@@ -3,6 +3,8 @@ import { FreshnessTable } from "./components/FreshnessTable";
 import { QualityMetrics } from "./components/QualityMetrics";
 import { StorageChart } from "./components/StorageChart";
 import { GlueJobsPanel } from "./components/GlueJobsPanel";
+import { SectionHeader } from "./components/SectionHeader";
+import { LiveTimestamp } from "./components/LiveTimestamp";
 import type {
   ApiResponse,
   DatasetFreshness,
@@ -96,9 +98,9 @@ export default async function Home() {
   ].filter(Boolean);
 
   return (
-    <div className="p-8 space-y-8 max-w-7xl mx-auto">
+    <div className="p-4 md:p-6 lg:p-8 space-y-8 max-w-7xl mx-auto">
       {/* Header da Página */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap gap-4 items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Visão Geral</h1>
           <p className="text-sm text-slate-500 mt-1">
@@ -112,9 +114,7 @@ export default async function Home() {
               Modo Demonstração
             </span>
           )}
-          <span className="text-xs text-slate-400">
-            Atualizado: {new Date().toLocaleTimeString("pt-BR")}
-          </span>
+          <LiveTimestamp />
         </div>
       </div>
 
@@ -136,38 +136,18 @@ export default async function Home() {
       <DashboardOverview data={overview} />
 
       {/* Grid de Detalhes */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8">
         {/* Coluna Esquerda */}
         <div className="space-y-8">
           <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
-              <div>
-                <h2 className="text-lg font-semibold text-slate-800">
-                  Atualização de Dados
-                </h2>
-                <p className="text-sm text-slate-500 mt-0.5">
-                  Status de atualização dos datasets vs SLA
-                </p>
-              </div>
-              <a href="/freshness" className="text-xs font-medium text-teal-600 hover:text-teal-700">Ver todos →</a>
-            </div>
+            <SectionHeader title="Atualização de Dados" subtitle="Status de atualização dos datasets vs SLA" href="/freshness" />
             <div className="p-6">
               <FreshnessTable datasets={freshnessData} />
             </div>
           </section>
 
           <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
-              <div>
-                <h2 className="text-lg font-semibold text-slate-800">
-                  Qualidade de Dados
-                </h2>
-                <p className="text-sm text-slate-500 mt-0.5">
-                  Regras de validação e verificações de anomalia
-                </p>
-              </div>
-              <a href="/quality" className="text-xs font-medium text-teal-600 hover:text-teal-700">Ver todos →</a>
-            </div>
+            <SectionHeader title="Qualidade de Dados" subtitle="Regras de validação e verificações de anomalia" href="/quality" />
             <div className="p-6">
               <QualityMetrics metrics={qualityData} />
             </div>
@@ -177,34 +157,14 @@ export default async function Home() {
         {/* Coluna Direita */}
         <div className="space-y-8">
           <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
-              <div>
-                <h2 className="text-lg font-semibold text-slate-800">
-                  Crescimento do Armazenamento
-                </h2>
-                <p className="text-sm text-slate-500 mt-0.5">
-                  Tendência de tamanho do lake nos últimos 30 dias
-                </p>
-              </div>
-              <a href="/storage" className="text-xs font-medium text-teal-600 hover:text-teal-700">Ver detalhes →</a>
-            </div>
+            <SectionHeader title="Crescimento do Armazenamento" subtitle="Tendência de tamanho do lake nos últimos 30 dias" href="/storage" linkLabel="Ver detalhes →" />
             <div className="p-6">
               <StorageChart summary={storageData} />
             </div>
           </section>
 
           <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
-              <div>
-                <h2 className="text-lg font-semibold text-slate-800">
-                  Jobs ETL (Glue)
-                </h2>
-                <p className="text-sm text-slate-500 mt-0.5">
-                  Status dos jobs e falhas recentes
-                </p>
-              </div>
-              <a href="/jobs" className="text-xs font-medium text-teal-600 hover:text-teal-700">Ver todos →</a>
-            </div>
+            <SectionHeader title="Jobs ETL (Glue)" subtitle="Status dos jobs e falhas recentes" href="/jobs" />
             <div className="p-6">
               <GlueJobsPanel jobs={glueData} />
             </div>
